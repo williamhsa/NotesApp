@@ -1,4 +1,13 @@
-const fs = require('fs')
+const add = require('./utils')
+const getNotes = require('./notes')
 
-// fs.writeFileSync('notes.txt', 'My name is William.')
-fs.appendFileSync('notes.txt', ' I am learning about nodejs.')
+console.log(add(1,1))
+
+const resultGetNotes = getNotes()
+
+console.log(resultGetNotes)
+
+/*
+cada modulo js possui seu proprio escopo
+
+*/
