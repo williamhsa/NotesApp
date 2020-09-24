@@ -1,18 +1,17 @@
 const fs = require('fs')
 const chalk = require('chalk')
 
-const getNotes = function () {
-  return 'Your notes...'
-}
-
 const addNote = function (title, body) {
   const notes = loadNotes()
   // console.log('notes: ', notes);
 
-  const duplicatedNotes = notes.filter(note => note.title === title)
+  // const duplicatedNotes = notes.filter(note => note.title === title)
+  // filter ira visitar todas posições do array, podemos usar find no lugar, pois ira para na primeira vez que
+  // encontrar um elemento duplicado.
   // console.log('duplicatedNotes', duplicatedNotes);
-
-  if (duplicatedNotes.length === 0) {
+  const duplicatedNote = notes.find(note => note.title === title)
+  // if (duplicatedNotes.length === 0) {
+  if (!duplicatedNote) {
     notes.push({
       title: title,
       body: body
@@ -39,12 +38,30 @@ const removeNote = title => {
   }
 }
 
+const listNotes = () => {
+  console.log(chalk.inverse('\nYour notes'))
+  const notes = loadNotes()
+  notes.forEach( note => console.log('Title: ' + note.title + ' || Body: ' + note.body + '\n'))
+}
+
+const readNote = title => {
+  // console.log('title', title);
+  const notes = loadNotes()
+  const noteFind = notes.find(note => note.title === title)
+
+  if (noteFind) {
+    console.log(chalk.yellow.inverse.bgBlackBright.bold('Title: ' + noteFind.title + ' - Body: ' + noteFind.body))
+  } else {
+    console.log(chalk.redBright('Note not found!'))
+  }
+}
+
 const saveNotes = function (notes) {
   const dataJSON = JSON.stringify(notes)
   fs.writeFileSync('notes.json', dataJSON)
 }
 
-const loadNotes = function () {
+const loadNotes = () => {
   try {
     const dataBuffer = fs.readFileSync('notes.json')
     const dataJSON = dataBuffer.toString()
@@ -52,11 +69,11 @@ const loadNotes = function () {
   } catch (e) {
     return []
   }
-
 }
 
 module.exports = {
-  getNotes: getNotes,
   addNote: addNote,
-  removeNote: removeNote
+  removeNote: removeNote,
+  listNotes: listNotes,
+  readNote: readNote
 }
